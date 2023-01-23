@@ -1,18 +1,34 @@
 <section>
+  <div class="search-field-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Filter podcasts...</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="value"
+        (input)="onSearchInput($event)" />
+      <button
+        *ngIf="value"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="clearSearchField()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+</section>
+<section>
   <div class="main-container">
     <ul class="grid-wrapper">
-      <li>podcast component 1</li>
-      <li>podcast component 2</li>
-      <li>podcast component 3</li>
-      <li>podcast component 4</li>
-      <li>podcast component 5</li>
-      <li>podcast component 6</li>
-      <li>podcast component 7</li>
-      <li>podcast component 8</li>
-      <li>podcast component 9</li>
-      <li>podcast component 10</li>	
-      <li>podcast component 11</li>	
-      <li>podcast component 12</li>	
+      <li
+        *ngFor="let podcast of podcastList | podcastsFilter : value"
+        [value]="podcast['title']" (click)="onPodcastDetail(podcast.id.attributes['im:id'])">
+        <app-podcast-avatar
+          [name]="podcast['im:name'].label"
+          [description]="podcast['im:artist'].label"
+          [imageSrc]="podcast['im:image'][0].label" />
+      </li>
     </ul>
   </div>
 </section>

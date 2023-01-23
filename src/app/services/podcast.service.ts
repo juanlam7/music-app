@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';
+import { retry, catchError, map } from 'rxjs/operators';
+import { ITopPoscast } from '../shared/types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PodcastService {
-  apiURL = 'https://itunes.apple.com/us/rss/toppodcasts/limit=100/genre=1310/json';
+  apiURL = 'https://itunes.apple.com/us/rss/toppodcasts/limit=10/genre=1310/json';
 
   constructor(private http: HttpClient) {}
 
-  getPodcast(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiURL).pipe(retry(1), catchError(this.handleError));
+  getPodcast(): Observable<ITopPoscast> {
+    return this.http.get<ITopPoscast>(this.apiURL).pipe(retry(1), catchError(this.handleError));
   }
 
   handleError(error: any) {

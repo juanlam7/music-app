@@ -1,0 +1,22 @@
+.podcast-avatar-container {
+  border-top: grey;
+  border-style: solid;
+  border-width: thin;
+  mat-card-header {
+    display: block;
+    padding: 0;
+    margin-top: -50px;
+    margin-bottom: -10px;
+    img {
+      height: 100px;
+      width: 100px;
+    }
+  }
+  mat-card-content {
+    h3 {
+      text-transform: uppercase;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+}

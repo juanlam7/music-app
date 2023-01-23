@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { IPodcast, ITopPoscast } from 'src/app/shared/types';
 import { PodcastService } from '../../services/podcast.service';
 
 @Component({
@@ -7,8 +8,9 @@ import { PodcastService } from '../../services/podcast.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  value: string = '';
 
-  podcastList: string[] = [];
+  podcastList: IPodcast[] = [];
 
   constructor(private podcastService: PodcastService) {}
 
@@ -16,9 +18,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loadPodcast();
   }
 
-  loadPodcast() {
-    return this.podcastService.getPodcast().subscribe((data) => {
+  loadPodcast(): void {
+    this.podcastService.getPodcast().subscribe((data: ITopPoscast) => {
+      this.podcastList = data.feed.entry;
     });
+  }
+
+  onPodcastDetail(id: string): void {
+    // navigate detail route with the id
+  }
+
+  onSearchInput(event: Event): void {
+    const searchQuery = (event.target as HTMLInputElement).value;
+  }
+
+  clearSearchField() {
+    this.value = '';
   }
 
   ngOnDestroy(): void {}

@@ -5,22 +5,25 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-
-import { HomeComponent } from './pages/home/home.component';
 import { AngularMaterialModule } from './shared/angular-material.module';
+import { ComponentsModule } from './components/components.module';
+
+import { AppComponent } from './app.component';
+import { HomeComponent } from './pages/home/home.component';
+import { FilterPipe } from './shared/filter.pipe';
 
 @NgModule({
   declarations: [
-    AppComponent, HomeComponent
+    AppComponent, HomeComponent, FilterPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
     AngularMaterialModule,
-    FormsModule
+    ComponentsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
