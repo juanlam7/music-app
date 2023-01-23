@@ -1,5 +1,8 @@
-<div class="content" role="main">
-  <span>{{ title }} app is running!</span>
-</div>
-
+<mat-toolbar color="warn">
+  <span>{{title}}</span>
+  <span class="spacer"></span>
+  <button mat-icon-button aria-label="icon-button">
+    <mat-icon>person</mat-icon>
+  </button>
+</mat-toolbar>
 <router-outlet></router-outlet>
