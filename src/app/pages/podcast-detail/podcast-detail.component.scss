@@ -1,0 +1,11 @@
+.podcast-detail-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-auto-rows: minmax(100px, 200px);
+  grid-gap: 2rem;
+  padding: 40px;
+  .podcast-detail-card {
+    padding: 20px;
+    padding-bottom: 60px;
+  }
+}

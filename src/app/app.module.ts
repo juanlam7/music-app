@@ -8,13 +8,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularMaterialModule } from './shared/angular-material.module';
 import { ComponentsModule } from './components/components.module';
 
+import { FilterPipe } from './shared/filter.pipe';
+
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
-import { FilterPipe } from './shared/filter.pipe';
+import { PodcastDetailComponent } from './pages/podcast-detail/podcast-detail.component';
 
 @NgModule({
   declarations: [
-    AppComponent, HomeComponent, FilterPipe
+    AppComponent,
+    HomeComponent,
+    FilterPipe,
+    PodcastDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -23,9 +28,9 @@ import { FilterPipe } from './shared/filter.pipe';
     HttpClientModule,
     FormsModule,
     AngularMaterialModule,
-    ComponentsModule
+    ComponentsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

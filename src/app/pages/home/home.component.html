@@ -23,7 +23,9 @@
     <ul class="grid-wrapper">
       <li
         *ngFor="let podcast of podcastList | podcastsFilter : value"
-        [value]="podcast['title']" (click)="onPodcastDetail(podcast.id.attributes['im:id'])">
+        [value]="podcast['title']"
+        [routerLink]="['podcast', podcast.id.attributes['im:id']]"
+        [state]="{ podcastSumary: podcast['summary'] }">
         <app-podcast-avatar
           [name]="podcast['im:name'].label"
           [description]="podcast['im:artist'].label"

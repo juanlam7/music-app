@@ -24,10 +24,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  onPodcastDetail(id: string): void {
-    // navigate detail route with the id
-  }
-
   onSearchInput(event: Event): void {
     const searchQuery = (event.target as HTMLInputElement).value;
   }

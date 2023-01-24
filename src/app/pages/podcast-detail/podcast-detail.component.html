@@ -1,0 +1,12 @@
+<div class="podcast-detail-container">
+  <section>
+    <div *ngFor="let item of podcastItem | async" class="podcast-detail-card">
+      <app-podcast-card
+        [podName]="item.collectionName"
+        [podDescription]="item.artistName"
+        [podSumary]="podcasteItemDescription"
+        [podImageSrc]="item.artworkUrl100" />
+    </div>
+  </section>
+  <section></section>
+</div>
