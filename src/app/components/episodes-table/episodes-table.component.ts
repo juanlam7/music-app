@@ -4,6 +4,8 @@ import {
   AfterViewInit,
   ViewChild,
   OnInit,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableDataSourcePaginator } from '@angular/material/table';
@@ -16,6 +18,8 @@ import { IGetEpiData } from 'src/app/shared/types';
 })
 export class EpisodesTableComponent implements OnInit, AfterViewInit {
   @Input() episodesData: IGetEpiData[] = [];
+
+  @Output () emitIdToParent: EventEmitter<string> = new EventEmitter();
 
   displayedColumns: string[] = ['title', 'date', 'duration'];
   dataSource!: MatTableDataSource<IGetEpiData, MatTableDataSourcePaginator>;
@@ -33,6 +37,6 @@ export class EpisodesTableComponent implements OnInit, AfterViewInit {
   }
 
   onSelectEpisode(item: IGetEpiData): void {
-    alert(item.attributes.itunesTitle);
+    this.emitIdToParent.emit(item.id);
   }
 }

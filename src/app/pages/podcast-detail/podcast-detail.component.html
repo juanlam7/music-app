@@ -1,6 +1,9 @@
 <div class="podcast-detail-container">
   <section>
-    <div *ngFor="let item of podcastItem | async" class="podcast-detail-card">
+    <div
+      *ngFor="let item of podcastItem | async"
+      class="podcast-detail-card"
+      (click)="onBackPodcastList()">
       <app-podcast-card
         [podName]="item.collectionName"
         [podDescription]="item.artistName"
@@ -9,6 +12,13 @@
     </div>
   </section>
   <section *ngIf="!isLoadingEpisodes">
-    <app-episodes-table [episodesData]="episodesList" />
+    <ng-container *ngIf="showMP3orTable; else mp3Component">
+      <app-episodes-table
+        [episodesData]="episodesList"
+        (emitIdToParent)="changeRouteEpisode($event)" />
+    </ng-container>
+    <ng-template #mp3Component>
+      <!-- <app-mp3 /> -->
+    </ng-template>
   </section>
 </div>

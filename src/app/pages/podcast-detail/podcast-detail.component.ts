@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {
   IGetEpiData,
@@ -17,37 +17,67 @@ export class PodcastDetailComponent implements OnInit {
   podcastItem?: Observable<IPodcastDetail[]>;
 
   podcasteItemDescription: string = '';
+  podcastId: string | null = '';
 
   isLoadingEpisodes: boolean = false;
+  showMP3orTable: boolean = true;
 
   episodesList: IGetEpiData[] = [];
 
   constructor(
     private route: ActivatedRoute,
+    private _router: Router,
     private podcastService: PodcastService
   ) {}
 
   ngOnInit(): void {
+    this.checkRouteOnInit();
     this.isLoadingEpisodes = true;
 
     this.route.paramMap.subscribe(params => {
-      const podcastId = params.get('id');
-      if (podcastId) {
-        this.podcastItem = this.podcastService.getPodcastById(podcastId);
+      this.podcastId = params.get('id');
+      if (this.podcastId) {
+        this.podcastItem = this.podcastService.getPodcastById(this.podcastId);
 
         this.podcasteItemDescription = history.state['podcastSumary'].label;
 
-        this.podcastItem.subscribe((resp: IPodcastDetail | any) => {
-          this.podcastService
-            .getEpisodes(resp[0].collectionViewUrl)
-            .subscribe((res: IGetEpisodesRes | undefined) => {
-              if (res) {
-                this.episodesList = res.data;
-                this.isLoadingEpisodes = false;
-              }
-            });
-        });
+        this.getEpisodesList();
       }
     });
+  }
+
+  getEpisodesList(): void {
+    if (this.podcastItem) {
+      this.podcastItem.subscribe((resp: IPodcastDetail | any) => {
+        this.podcastService
+          .getEpisodes(resp[0].collectionViewUrl)
+          .subscribe((res: IGetEpisodesRes | undefined) => {
+            if (res) {
+              this.episodesList = res.data;
+              this.isLoadingEpisodes = false;
+            }
+          });
+      });
+    }
+  }
+
+  checkRouteOnInit(): void {
+    this._router.events.subscribe((event: any) => {
+      if (event instanceof NavigationEnd) {
+        if (event.urlAfterRedirects.includes('/episode/'))
+          this.showMP3orTable = false;
+      }
+    });
+  }
+
+  changeRouteEpisode(event: string): void {
+    this._router.navigate(['episode', event], { relativeTo: this.route });
+  }
+
+  onBackPodcastList(): void {
+    if (this.podcastId) {
+      this._router.navigate(['podcast', this.podcastId]);
+      this.showMP3orTable = true;
+    }
   }
 }

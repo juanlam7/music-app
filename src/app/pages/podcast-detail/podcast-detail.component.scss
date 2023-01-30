@@ -7,6 +7,9 @@
   .podcast-detail-card {
     padding: 20px;
     padding-bottom: 60px;
+    app-podcast-card {
+      cursor: pointer;
+    }
   }
 }
 
