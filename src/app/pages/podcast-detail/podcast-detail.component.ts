@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { IPodcastDetail } from 'src/app/shared/types';
+import {
+  IGetEpiData,
+  IGetEpisodesRes,
+  IPodcastDetail,
+} from 'src/app/shared/types';
 import { PodcastService } from '../../services/podcast.service';
 
 @Component({
@@ -14,12 +18,18 @@ export class PodcastDetailComponent implements OnInit {
 
   podcasteItemDescription: string = '';
 
+  isLoadingEpisodes: boolean = false;
+
+  episodesList: IGetEpiData[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private podcastService: PodcastService
   ) {}
 
   ngOnInit(): void {
+    this.isLoadingEpisodes = true;
+
     this.route.paramMap.subscribe(params => {
       const podcastId = params.get('id');
       if (podcastId) {
@@ -30,8 +40,11 @@ export class PodcastDetailComponent implements OnInit {
         this.podcastItem.subscribe((resp: IPodcastDetail | any) => {
           this.podcastService
             .getEpisodes(resp[0].collectionViewUrl)
-            .subscribe(data => {
-              console.log(data);
+            .subscribe((res: IGetEpisodesRes | undefined) => {
+              if (res) {
+                this.episodesList = res.data;
+                this.isLoadingEpisodes = false;
+              }
             });
         });
       }

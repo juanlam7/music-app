@@ -8,7 +8,7 @@
         [podImageSrc]="item.artworkUrl100" />
     </div>
   </section>
-  <section>
-    <app-episodes-table />
+  <section *ngIf="!isLoadingEpisodes">
+    <app-episodes-table [episodesData]="episodesList" />
   </section>
 </div>

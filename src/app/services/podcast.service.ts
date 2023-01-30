@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
-import { IPodcastDetail, ITopPoscast } from '../shared/types';
+import { IGetEpisodesRes, IPodcastDetail, ITopPoscast } from '../shared/types';
 
 @Injectable({
   providedIn: 'root',
@@ -30,12 +30,11 @@ export class PodcastService {
       .pipe(
         retry(1),
         map(x => JSON.parse(x.contents).results),
-        // map(x => JSON.parse(x)),
         catchError(this.handleError)
       );
   }
 
-  getEpisodes(urlContent: string): Observable<any> {
+  getEpisodes(urlContent: string): Observable<IGetEpisodesRes | undefined> {
     return this.http
       .get<any>(
         `https://api.allorigins.win/get?url=${encodeURIComponent(
@@ -44,23 +43,7 @@ export class PodcastService {
       )
       .pipe(
         retry(1),
-        map(x => {
-          if (x.contents.includes('{".v1.catalog.us.podcasts.') &&  x.contents.includes('".v1.catalog.us.charts.types')) {
-            const firstItem =
-              x.contents.search('{".v1.catalog.us.podcasts.') + 1;
-            const secondItem =
-              x.contents.search('".v1.catalog.us.charts.types') - 1;
-            const result = x.contents.slice(firstItem, secondItem);
-
-            const thirdItem = result.search('5bepisodes.5d.6":');
-            const finalResult = result.slice(thirdItem + 17, result.length);
-
-            const parsedResult = JSON.parse(JSON.parse(finalResult)).d[0].relationships.episodes;
-
-            return parsedResult;
-          }
-          return;
-        }),
+        map(x => this.handleGetEpisodeBigStrg(x)),
         catchError(this.handleError)
       );
   }
@@ -76,5 +59,32 @@ export class PodcastService {
     return throwError(() => {
       return errorMessage;
     });
+  }
+
+  handleGetEpisodeBigStrg(bigStrg: any) {
+    if (
+      bigStrg.contents.includes('{".v1.catalog.us.podcasts.') &&
+      bigStrg.contents.includes('".v1.catalog.us.charts.types')
+    ) {
+      const firstItem =
+        bigStrg.contents.search('{".v1.catalog.us.podcasts.') + 1;
+      const secondItem =
+        bigStrg.contents.search('".v1.catalog.us.charts.types') - 1;
+      const result = bigStrg.contents.slice(firstItem, secondItem);
+
+      const thirdItem = result.search('5bepisodes.5d.6":');
+
+      const checkString = result.includes('.v1.catalog.us.artists')
+        ? result.search('".v1.catalog.us.artists') - 1
+        : result.length;
+
+      const finalResult = result.slice(thirdItem + 17, checkString);
+
+      const parsedResult = JSON.parse(JSON.parse(finalResult)).d[0]
+        .relationships.episodes;
+
+      return parsedResult;
+    }
+    return;
   }
 }

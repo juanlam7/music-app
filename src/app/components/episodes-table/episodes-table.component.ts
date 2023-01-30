@@ -1,53 +1,38 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  Input,
+  AfterViewInit,
+  ViewChild,
+  OnInit,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-
-export interface PeriodicElement {
-  title: string;
-  date: string;
-  duration: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { title: 'Lorem Ipsum is simply dummy text', date: '1/3/2016', duration: '14:00' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '18/2/2016', duration: '15:03' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '23/11/2015', duration: '12:18' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '1/3/2016', duration: '14:00' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '18/2/2016', duration: '15:03' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '23/11/2015', duration: '12:18' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '1/3/2016', duration: '14:00' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '18/2/2016', duration: '15:03' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '23/11/2015', duration: '12:18' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '1/3/2016', duration: '14:00' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '18/2/2016', duration: '15:03' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '23/11/2015', duration: '12:18' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '1/3/2016', duration: '14:00' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '18/2/2016', duration: '15:03' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '23/11/2015', duration: '12:18' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '1/3/2016', duration: '14:00' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '18/2/2016', duration: '15:03' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '23/11/2015', duration: '12:18' },
-  { title: 'Lorem Ipsum is simply dummy text', date: '1/3/2016', duration: '20:27' },
-];
+import { MatTableDataSource, MatTableDataSourcePaginator } from '@angular/material/table';
+import { IGetEpiData } from 'src/app/shared/types';
 
 @Component({
   selector: 'app-episodes-table',
   templateUrl: './episodes-table.component.html',
   styleUrls: ['./episodes-table.component.scss'],
 })
-export class EpisodesTableComponent implements AfterViewInit {
+export class EpisodesTableComponent implements OnInit, AfterViewInit {
+  @Input() episodesData: IGetEpiData[] = [];
+
   displayedColumns: string[] = ['title', 'date', 'duration'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  dataSource!: MatTableDataSource<IGetEpiData, MatTableDataSourcePaginator>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor() {}
 
+  ngOnInit(): void {
+    this.dataSource = new MatTableDataSource<IGetEpiData>(this.episodesData);
+  }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
 
-  onSelectEpisode(item: PeriodicElement): void {
-    alert(item.title);
+  onSelectEpisode(item: IGetEpiData): void {
+    alert(item.attributes.itunesTitle);
   }
 }

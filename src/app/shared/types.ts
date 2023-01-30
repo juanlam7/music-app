@@ -74,3 +74,59 @@ export interface IPodcastDetail {
   genreIds: string[];
   genres: string[];
 }
+
+export interface OfferEpi {
+  kind: string;
+  type: string;
+}
+
+export interface IDescriptionEpi {
+  standard: string;
+  short: string;
+}
+
+export interface ArtworkEpi {
+  width: number;
+  height: number;
+  url: string;
+  bgColor: string;
+  textColor1: string;
+  textColor2: string;
+  textColor3: string;
+  textColor4: string;
+}
+
+export interface IAttributesEpi {
+  offers: OfferEpi[];
+  copyright: string;
+  contentAdvisory: string;
+  genreNames: string[];
+  topics: any[];
+  kind: string;
+  itunesTitle: string;
+  mediaKind: string;
+  description: IDescriptionEpi;
+  artwork: ArtworkEpi;
+  url: string;
+  releaseDateTime: Date;
+  websiteUrl: string;
+  durationInMilliseconds: number;
+  name: string;
+  guid: string;
+  artistName: string;
+  contentRating: string;
+  subscribable: boolean;
+  assetUrl: string;
+}
+
+export interface IGetEpiData {
+  id: string;
+  type: string;
+  href: string;
+  attributes: IAttributesEpi;
+}
+
+export interface IGetEpisodesRes {
+  href: string;
+  data: IGetEpiData[];
+}
