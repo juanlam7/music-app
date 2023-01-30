@@ -3,9 +3,17 @@
   grid-template-columns: 1fr 2fr;
   grid-auto-rows: minmax(100px, 200px);
   grid-gap: 2rem;
-  padding: 40px;
+  padding: 70px;
   .podcast-detail-card {
     padding: 20px;
     padding-bottom: 60px;
+  }
+}
+
+@media (max-width: 750px) {
+  .podcast-detail-container {
+    display: block;
+    text-align: -webkit-center;
+    padding: 20px;
   }
 }

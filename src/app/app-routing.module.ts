@@ -12,6 +12,12 @@ const routes: Routes = [
   {
     path: 'podcast/:id',
     component: PodcastDetailComponent,
+    children: [
+      {
+        path: 'episode/:id',
+        component: PodcastDetailComponent,
+      }
+    ]
   },
 ];
 

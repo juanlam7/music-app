@@ -1,0 +1,16 @@
+table {
+  width: 100%;
+  padding: 10px;
+  td {
+    span {
+      cursor: pointer;
+      color: rgb(0, 0, 187);
+    }
+  }
+  tr:nth-child(even) {
+    background-color: #f3f3f3;
+  }
+  .minor-column-width {
+    width: 5rem;
+  }
+}

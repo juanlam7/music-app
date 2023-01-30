@@ -35,6 +35,36 @@ export class PodcastService {
       );
   }
 
+  getEpisodes(urlContent: string): Observable<any> {
+    return this.http
+      .get<any>(
+        `https://api.allorigins.win/get?url=${encodeURIComponent(
+          `${urlContent}`
+        )}`
+      )
+      .pipe(
+        retry(1),
+        map(x => {
+          if (x.contents.includes('{".v1.catalog.us.podcasts.') &&  x.contents.includes('".v1.catalog.us.charts.types')) {
+            const firstItem =
+              x.contents.search('{".v1.catalog.us.podcasts.') + 1;
+            const secondItem =
+              x.contents.search('".v1.catalog.us.charts.types') - 1;
+            const result = x.contents.slice(firstItem, secondItem);
+
+            const thirdItem = result.search('5bepisodes.5d.6":');
+            const finalResult = result.slice(thirdItem + 17, result.length);
+
+            const parsedResult = JSON.parse(JSON.parse(finalResult)).d[0].relationships.episodes;
+
+            return parsedResult;
+          }
+          return;
+        }),
+        catchError(this.handleError)
+      );
+  }
+
   handleError(error: any) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {

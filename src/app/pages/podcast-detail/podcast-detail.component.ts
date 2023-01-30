@@ -26,6 +26,14 @@ export class PodcastDetailComponent implements OnInit {
         this.podcastItem = this.podcastService.getPodcastById(podcastId);
 
         this.podcasteItemDescription = history.state['podcastSumary'].label;
+
+        this.podcastItem.subscribe((resp: IPodcastDetail | any) => {
+          this.podcastService
+            .getEpisodes(resp[0].collectionViewUrl)
+            .subscribe(data => {
+              console.log(data);
+            });
+        });
       }
     });
   }
