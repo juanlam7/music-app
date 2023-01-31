@@ -18,7 +18,10 @@
         (emitIdToParent)="changeRouteEpisode($event)" />
     </ng-container>
     <ng-template #mp3Component>
-      <!-- <app-mp3 /> -->
+      <app-mp3
+        [epiName]="selectedEpisode.attributes.name"
+        [epiAudio]="selectedEpisode.attributes.assetUrl"
+        [epiDescription]="selectedEpisode.attributes.description.standard" />
     </ng-template>
   </section>
 </div>

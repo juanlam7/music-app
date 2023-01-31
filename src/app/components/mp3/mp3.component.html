@@ -1,0 +1,11 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ epiName }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ epiDescription }}</p>
+    <audio controls>
+      <source [src]="epiAudio" type="audio/mpeg" />
+    </audio>
+  </mat-card-content>
+</mat-card>

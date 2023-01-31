@@ -24,6 +24,8 @@ export class PodcastDetailComponent implements OnInit {
 
   episodesList: IGetEpiData[] = [];
 
+  selectedEpisode!: IGetEpiData;
+
   constructor(
     private route: ActivatedRoute,
     private _router: Router,
@@ -31,15 +33,13 @@ export class PodcastDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.validateHistoryState();
     this.checkRouteOnInit();
-    this.isLoadingEpisodes = true;
 
     this.route.paramMap.subscribe(params => {
       this.podcastId = params.get('id');
       if (this.podcastId) {
         this.podcastItem = this.podcastService.getPodcastById(this.podcastId);
-
-        this.podcasteItemDescription = history.state['podcastSumary'].label;
 
         this.getEpisodesList();
       }
@@ -47,6 +47,7 @@ export class PodcastDetailComponent implements OnInit {
   }
 
   getEpisodesList(): void {
+    this.isLoadingEpisodes = true;
     if (this.podcastItem) {
       this.podcastItem.subscribe((resp: IPodcastDetail | any) => {
         this.podcastService
@@ -71,6 +72,13 @@ export class PodcastDetailComponent implements OnInit {
   }
 
   changeRouteEpisode(event: string): void {
+    const searchEpisode = this.episodesList.find(
+      element => element.id === event
+    );
+    if (searchEpisode) {
+      this.selectedEpisode = searchEpisode;
+    }
+
     this._router.navigate(['episode', event], { relativeTo: this.route });
   }
 
@@ -78,6 +86,14 @@ export class PodcastDetailComponent implements OnInit {
     if (this.podcastId) {
       this._router.navigate(['podcast', this.podcastId]);
       this.showMP3orTable = true;
+    }
+  }
+
+  validateHistoryState(): void {
+    if (history.state['podcastSumary']) {
+      this.podcasteItemDescription = history.state['podcastSumary'].label;
+    } else {
+      this._router.navigate(['/']);
     }
   }
 }
