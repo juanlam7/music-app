@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
+
 import { IGetEpisodesRes, IPodcastDetail, ITopPoscast } from '../shared/types';
+
+import { handleError } from '../utils/errorHandling';
+import { handleGetEpisodeBigStrg } from '../utils/bigStrgRes';
+import { checkLocalStorageData } from '../utils/saveLocalStorage';
 
 @Injectable({
   providedIn: 'root',
@@ -13,78 +18,93 @@ export class PodcastService {
   constructor(private http: HttpClient) {}
 
   getPodcast(): Observable<ITopPoscast> {
-    return this.http
-      .get<ITopPoscast>(
-        `${this.apiURL}/us/rss/toppodcasts/limit=10/genre=1310/json`
-      )
-      .pipe(retry(1), catchError(this.handleError));
+    const lsGetPodcastData = 'AllPodcast';
+    const lsGetPodcastDate = 'AllPodcastDATE';
+
+    const validLocalST = checkLocalStorageData(
+      lsGetPodcastData,
+      lsGetPodcastDate
+    );
+
+    if (validLocalST) {
+      return of(validLocalST);
+    } else {
+      return this.http
+        .get<ITopPoscast>(
+          `${this.apiURL}/us/rss/toppodcasts/limit=100/genre=1310/json`
+        )
+        .pipe(
+          retry(1),
+          map(x => {
+            localStorage.setItem(lsGetPodcastData, JSON.stringify(x));
+            localStorage.setItem(lsGetPodcastDate, JSON.stringify(new Date()));
+            return x;
+          }),
+          catchError(handleError)
+        );
+    }
   }
 
   getPodcastById(podcastId: string): Observable<IPodcastDetail[]> {
-    return this.http
-      .get<any>(
-        `https://api.allorigins.win/get?url=${encodeURIComponent(
-          `${this.apiURL}/lookup?id=${podcastId}`
-        )}`
-      )
-      .pipe(
-        retry(1),
-        map(x => JSON.parse(x.contents).results),
-        catchError(this.handleError)
-      );
+    const lsGetPodcastByIdData = `getPodcastById=${podcastId}`;
+    const lsGetPodcastByIdDate = `getPodcastByIdDATE=${podcastId}`;
+    const validLocalST = checkLocalStorageData(
+      lsGetPodcastByIdData,
+      lsGetPodcastByIdDate
+    );
+
+    if (validLocalST) {
+      return of(validLocalST);
+    } else {
+      return this.http
+        .get<any>(
+          `https://api.allorigins.win/get?url=${encodeURIComponent(
+            `${this.apiURL}/lookup?id=${podcastId}`
+          )}`
+        )
+        .pipe(
+          retry(1),
+          map(x => JSON.parse(x.contents).results),
+          map(x => {
+            localStorage.setItem(lsGetPodcastByIdData, JSON.stringify(x));
+            localStorage.setItem(
+              lsGetPodcastByIdDate,
+              JSON.stringify(new Date())
+            );
+            return x;
+          }),
+          catchError(handleError)
+        );
+    }
   }
 
   getEpisodes(urlContent: string): Observable<IGetEpisodesRes | undefined> {
-    return this.http
-      .get<any>(
-        `https://api.allorigins.win/get?url=${encodeURIComponent(
-          `${urlContent}`
-        )}`
-      )
-      .pipe(
-        retry(1),
-        map(x => this.handleGetEpisodeBigStrg(x)),
-        catchError(this.handleError)
-      );
-  }
+    const lsGetEpisodesData = `getEpisodes=${urlContent}`;
+    const lsGetEpisodesDate = `getEpisodesDATE=${urlContent}`;
+    const validLocalST = checkLocalStorageData(
+      lsGetEpisodesData,
+      lsGetEpisodesDate
+    );
 
-  handleError(error: any) {
-    let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = error.error.message;
+    if (validLocalST) {
+      return of(validLocalST);
     } else {
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      return this.http
+        .get<any>(
+          `https://api.allorigins.win/get?url=${encodeURIComponent(
+            `${urlContent}`
+          )}`
+        )
+        .pipe(
+          retry(1),
+          map(x => handleGetEpisodeBigStrg(x)),
+          map(x => {
+            localStorage.setItem(lsGetEpisodesData, JSON.stringify(x));
+            localStorage.setItem(lsGetEpisodesDate, JSON.stringify(new Date()));
+            return x;
+          }),
+          catchError(handleError)
+        );
     }
-    window.alert(errorMessage);
-    return throwError(() => {
-      return errorMessage;
-    });
-  }
-
-  handleGetEpisodeBigStrg(bigStrg: any) {
-    if (
-      bigStrg.contents.includes('{".v1.catalog.us.podcasts.') &&
-      bigStrg.contents.includes('".v1.catalog.us.charts.types')
-    ) {
-      const firstItem =
-        bigStrg.contents.search('{".v1.catalog.us.podcasts.') + 1;
-      const secondItem =
-        bigStrg.contents.search('".v1.catalog.us.charts.types') - 1;
-      const result = bigStrg.contents.slice(firstItem, secondItem);
-
-      const thirdItem = result.search('5bepisodes.5d.6":');
-
-      const checkString = result.includes('.v1.catalog.us.artists')
-        ? result.search('".v1.catalog.us.artists') - 1
-        : result.length;
-
-      const finalResult = result.slice(thirdItem + 17, checkString);
-
-      const parsedResult = JSON.parse(JSON.parse(finalResult)).d[0]
-        .relationships.episodes;
-
-      return parsedResult;
-    }
-    return;
   }
 }
