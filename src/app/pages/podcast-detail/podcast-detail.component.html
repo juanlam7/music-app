@@ -19,9 +19,9 @@
     </ng-container>
     <ng-template #mp3Component>
       <app-mp3
-        [epiName]="selectedEpisode.attributes.name"
-        [epiAudio]="selectedEpisode.attributes.assetUrl"
-        [epiDescription]="selectedEpisode.attributes.description.standard" />
+        [epiName]="selectedEpisode ? selectedEpisode.attributes.name : 'default value' "
+        [epiAudio]="selectedEpisode ? selectedEpisode.attributes.assetUrl : 'default value'"
+        [epiDescription]="selectedEpisode ? selectedEpisode.attributes.description.standard : 'default value'" />
     </ng-template>
   </section>
 </div>

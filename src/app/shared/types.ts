@@ -43,7 +43,7 @@ export interface IPodcastDetailResponse {
 export interface IPodcastDetail {
   wrapperType: string;
   kind: string;
-  artistId: number;
+  artistId?: number;
   collectionId: number;
   trackId: number;
   artistName: string;
@@ -51,7 +51,7 @@ export interface IPodcastDetail {
   trackName: string;
   collectionCensoredName: string;
   trackCensoredName: string;
-  artistViewUrl: string;
+  artistViewUrl?: string;
   collectionViewUrl: string;
   feedUrl: string;
   trackViewUrl: string;
@@ -61,7 +61,7 @@ export interface IPodcastDetail {
   collectionPrice: number;
   trackPrice: number;
   collectionHdPrice: number;
-  releaseDate: Date;
+  releaseDate: any;
   collectionExplicitness: string;
   trackExplicitness: string;
   trackCount: number;
@@ -108,7 +108,7 @@ export interface IAttributesEpi {
   description: IDescriptionEpi;
   artwork: ArtworkEpi;
   url: string;
-  releaseDateTime: Date;
+  releaseDateTime: any;
   websiteUrl: string;
   durationInMilliseconds: number;
   name: string;
