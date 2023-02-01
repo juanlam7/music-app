@@ -6,6 +6,7 @@
   padding: 70px;
   .podcast-detail-card {
     padding-bottom: 60px;
+    max-width: 350px;
     app-podcast-card {
       cursor: pointer;
     }

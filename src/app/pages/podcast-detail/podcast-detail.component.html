@@ -11,6 +11,14 @@
         [podImageSrc]="item.artworkUrl100" />
     </div>
   </section>
+  <section *ngIf="isLoadingEpisodes">
+    <ngx-skeleton-loader
+      count="1"
+      [theme]="{ 'border-radius': '0', height: '50px' }"></ngx-skeleton-loader>
+    <ngx-skeleton-loader
+      count="1"
+      [theme]="{ 'border-radius': '0', height: '300px' }"></ngx-skeleton-loader>
+  </section>
   <section *ngIf="!isLoadingEpisodes">
     <ng-container *ngIf="showMP3orTable; else mp3Component">
       <app-episodes-table
@@ -19,9 +27,19 @@
     </ng-container>
     <ng-template #mp3Component>
       <app-mp3
-        [epiName]="selectedEpisode ? selectedEpisode.attributes.name : 'default value' "
-        [epiAudio]="selectedEpisode ? selectedEpisode.attributes.assetUrl : 'default value'"
-        [epiDescription]="selectedEpisode ? selectedEpisode.attributes.description.standard : 'default value'" />
+        [epiName]="
+          selectedEpisode ? selectedEpisode.attributes.name : 'default value'
+        "
+        [epiAudio]="
+          selectedEpisode
+            ? selectedEpisode.attributes.assetUrl
+            : 'default value'
+        "
+        [epiDescription]="
+          selectedEpisode
+            ? selectedEpisode.attributes.description.standard
+            : 'default value'
+        " />
     </ng-template>
   </section>
 </div>

@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AngularMaterialModule } from './shared/angular-material.module';
 import { ComponentsModule } from './components/components.module';
 
@@ -29,6 +30,7 @@ import { PodcastDetailComponent } from './pages/podcast-detail/podcast-detail.co
     FormsModule,
     AngularMaterialModule,
     ComponentsModule,
+    NgxSkeletonLoaderModule
   ],
   providers: [],
   bootstrap: [AppComponent],

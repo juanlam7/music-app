@@ -1,5 +1,6 @@
 <section>
   <div class="search-field-container">
+    <span class="search-field-span">{{(podcastList  | podcastsFilter : value).length}}</span>
     <mat-form-field appearance="outline">
       <mat-label>Filter podcasts...</mat-label>
       <input
