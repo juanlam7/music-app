@@ -182,7 +182,7 @@ describe('PodcastDetailComponent ohter', () => {
     }));
   });
 
-  it('should call navigate with a enpty route', () => {
+  it('should call navigate with a empty route', () => {
     fixture.detectChanges();
     expect(otherRouterMock.navigate).toHaveBeenCalledWith(['/']);
   });

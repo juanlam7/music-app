@@ -24,10 +24,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSearchInput(event: Event): void {
-    const searchQuery = (event.target as HTMLInputElement).value;
-  }
-
   clearSearchField() {
     this.value = '';
   }
